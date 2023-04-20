@@ -1,5 +1,6 @@
 const express = require("express");
 const userRouter = require("./users/users-router");
+const { logger } = require("./middleware/middleware");
 
 const server = express();
 
@@ -8,7 +9,7 @@ const server = express();
 // global ara yazılımlar ve kullanıcı routelarının buraya bağlanması gerekir
 server.use(express.json());
 
-server.get("/", (req, res) => {
+server.get("/", logger, (req, res) => {
   res.send(`<h2>Biraz ara yazılım yazalım!</h2>`);
 });
 
