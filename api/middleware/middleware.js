@@ -42,6 +42,13 @@ function validateUser(req, res, next) {
 
 function validatePost(req, res, next) {
   try {
+    console.log(req.body);
+    const { text } = req.body;
+    if (!text) {
+      return res.status(400).json({
+        message: "gerekli text alanı eksik",
+      });
+    }
     next();
   } catch (err) {}
   next(err);

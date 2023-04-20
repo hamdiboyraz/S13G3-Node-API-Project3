@@ -1,5 +1,9 @@
 const express = require("express");
-const { validateUserId, validateUser } = require("../middleware/middleware");
+const {
+  validateUserId,
+  validateUser,
+  validatePost,
+} = require("../middleware/middleware");
 
 const usersController = require("./users-model");
 const postsController = require("../posts/posts-model");
@@ -42,7 +46,7 @@ router.get("/:id/posts", validateUserId, (req, res) => {
   // user id yi doğrulayan bir ara yazılım gereklidir.
 });
 
-router.post("/:id/posts", validateUserId, (req, res) => {
+router.post("/:id/posts", validateUserId, validatePost, (req, res) => {
   // YENİ OLUŞTURULAN KULLANICI NESNESİNİ DÖNDÜRÜN
   // user id yi doğrulayan bir ara yazılım gereklidir.
   // ve istek gövdesini doğrulayan bir ara yazılım gereklidir.
