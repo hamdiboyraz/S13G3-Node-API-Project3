@@ -42,7 +42,8 @@ function validateUser(req, res, next) {
 
 function validatePost(req, res, next) {
   try {
-    console.log(req.body);
+    // console.log(req.body);
+
     const { text } = req.body;
     if (!text) {
       return res.status(400).json({
@@ -50,8 +51,10 @@ function validatePost(req, res, next) {
       });
     }
     next();
-  } catch (err) {}
-  next(err);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
 }
 
 // bu işlevleri diğer modüllere değdirmeyi unutmayın

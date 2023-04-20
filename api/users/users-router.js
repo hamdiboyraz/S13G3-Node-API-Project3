@@ -8,49 +8,100 @@ const {
 const usersController = require("./users-model");
 const postsController = require("../posts/posts-model");
 
-// `users-model.js` ve `posts-model.js` sayfalarına ihtiyacınız var
-// ara yazılım fonksiyonları da gereklidir
-
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  // TÜM KULLANICILARI İÇEREN DİZİYİ DÖNDÜRÜN
-  console.log("helloo");
+router.get("/", async (req, res, next) => {
+  try {
+    const users = await usersController.get();
+    res.status(200).json(users);
+  } catch (err) {
+    console.log(err);
+    // res.status(500).json({ message: "Kullanıcılar alınamadı" });
+    next(err);
+  }
 });
 
-router.get("/:id", validateUserId, (req, res) => {
-  // USER NESNESİNİ DÖNDÜRÜN
-  // user id yi getirmek için bir ara yazılım gereklidir
-  console.log(req.params);
-  console.log(req.user);
+router.get("/:id", validateUserId, async (req, res, next) => {
+  try {
+    // console.log(req.params);
+    // console.log(req.user);
+    res.status(200).json(req.user);
+  } catch (err) {
+    console.log(err);
+    // res.status(500).json({ message: "Gönderi bilgisi alınamadı" });
+    next(err);
+  }
 });
 
-router.post("/", validateUser, (req, res) => {
-  // YENİ OLUŞTURULAN USER NESNESİNİ DÖNDÜRÜN
-  // istek gövdesini doğrulamak için ara yazılım gereklidir.
+router.post("/", validateUser, async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const { name } = req.body;
+    const newUser = await usersController.insert({ name });
+    // console.log(newUser);
+    res.status(201).json(newUser);
+  } catch (err) {
+    console.log(err);
+    // res.status(500).json({ message: "" });
+    next(err);
+  }
 });
 
-router.put("/:id", validateUserId, (req, res) => {
-  // YENİ GÜNCELLENEN USER NESNESİNİ DÖNDÜRÜN
-  // user id yi doğrulayan ara yazılım gereklidir
-  // ve istek gövdesini doğrulayan bir ara yazılım gereklidir.
+router.put("/:id", validateUser, validateUserId, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    console.log(req.user);
+    const updatedUser = await usersController.update(id, { name });
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.log(err);
+    // res.status(500).json({ message: "" });
+    next(err);
+  }
 });
 
-router.delete("/:id", validateUserId, (req, res) => {
-  // SON SİLİNEN USER NESNESİ DÖNDÜRÜN
-  // user id yi doğrulayan bir ara yazılım gereklidir.
+router.delete("/:id", validateUserId, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const deletedUser = req.user;
+    await usersController.remove(id);
+    res.status(200).json(deletedUser);
+  } catch (err) {
+    console.log(err);
+    // res.status(500).json({ message: "" });
+    next(err);
+  }
 });
 
-router.get("/:id/posts", validateUserId, (req, res) => {
-  // USER POSTLARINI İÇEREN BİR DİZİ DÖNDÜRÜN
-  // user id yi doğrulayan bir ara yazılım gereklidir.
+router.get("/:id/posts", validateUserId, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userPosts = await usersController.getUserPosts(id);
+    res.status(200).json(userPosts);
+  } catch (err) {
+    console.log(err);
+    // res.status(500).json({ message: "" });
+    next(err);
+  }
 });
 
-router.post("/:id/posts", validateUserId, validatePost, (req, res) => {
-  // YENİ OLUŞTURULAN KULLANICI NESNESİNİ DÖNDÜRÜN
-  // user id yi doğrulayan bir ara yazılım gereklidir.
-  // ve istek gövdesini doğrulayan bir ara yazılım gereklidir.
-});
+router.post(
+  "/:id/posts",
+  validatePost,
+  validateUserId,
+  async (req, res, next) => {
+    try {
+      const user_id = req.params.id;
+      const { text } = req.body;
+      const newPost = await postsController.insert({ user_id, text });
+      res.status(201).json(newPost);
+    } catch (err) {
+      console.log(err);
+      // res.status(500).json({ message: "" });
+      next(err);
+    }
+  }
+);
 
-// routerı dışa aktarmayı unutmayın
 module.exports = router;
