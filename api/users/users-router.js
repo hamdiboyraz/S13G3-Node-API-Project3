@@ -1,5 +1,5 @@
 const express = require("express");
-const { validateUserId } = require("../middleware/middleware");
+const { validateUserId, validateUser } = require("../middleware/middleware");
 
 const usersController = require("./users-model");
 const postsController = require("../posts/posts-model");
@@ -21,7 +21,7 @@ router.get("/:id", validateUserId, (req, res) => {
   console.log(req.user);
 });
 
-router.post("/", (req, res) => {
+router.post("/", validateUser, (req, res) => {
   // YENİ OLUŞTURULAN USER NESNESİNİ DÖNDÜRÜN
   // istek gövdesini doğrulamak için ara yazılım gereklidir.
 });

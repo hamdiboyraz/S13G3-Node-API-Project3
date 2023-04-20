@@ -26,6 +26,13 @@ async function validateUserId(req, res, next) {
 
 function validateUser(req, res, next) {
   try {
+    // console.log(req.body);
+    const { name } = req.body;
+    if (!name) {
+      return res.status(400).json({
+        message: "gerekli name alanı eksik",
+      });
+    }
     next();
   } catch (err) {
     console.log(err);
