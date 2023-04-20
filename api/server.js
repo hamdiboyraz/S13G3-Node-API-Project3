@@ -9,10 +9,10 @@ const server = express();
 // global ara yazılımlar ve kullanıcı routelarının buraya bağlanması gerekir
 server.use(express.json());
 
-server.get("/", logger, (req, res) => {
+server.get("/", (req, res) => {
   res.send(`<h2>Biraz ara yazılım yazalım!</h2>`);
 });
 
-server.use("/api/users", userRouter);
+server.use("/api/users", logger, userRouter);
 
 module.exports = server;

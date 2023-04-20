@@ -1,4 +1,6 @@
 const express = require("express");
+const { validateUserId } = require("../middleware/middleware");
+
 const usersController = require("./users-model");
 const postsController = require("../posts/posts-model");
 
@@ -12,9 +14,11 @@ router.get("/", (req, res) => {
   console.log("helloo");
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", validateUserId, (req, res) => {
   // USER NESNESİNİ DÖNDÜRÜN
   // user id yi getirmek için bir ara yazılım gereklidir
+  console.log(req.params);
+  console.log(req.user);
 });
 
 router.post("/", (req, res) => {
@@ -22,23 +26,23 @@ router.post("/", (req, res) => {
   // istek gövdesini doğrulamak için ara yazılım gereklidir.
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", validateUserId, (req, res) => {
   // YENİ GÜNCELLENEN USER NESNESİNİ DÖNDÜRÜN
   // user id yi doğrulayan ara yazılım gereklidir
   // ve istek gövdesini doğrulayan bir ara yazılım gereklidir.
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", validateUserId, (req, res) => {
   // SON SİLİNEN USER NESNESİ DÖNDÜRÜN
   // user id yi doğrulayan bir ara yazılım gereklidir.
 });
 
-router.get("/:id/posts", (req, res) => {
+router.get("/:id/posts", validateUserId, (req, res) => {
   // USER POSTLARINI İÇEREN BİR DİZİ DÖNDÜRÜN
   // user id yi doğrulayan bir ara yazılım gereklidir.
 });
 
-router.post("/:id/posts", (req, res) => {
+router.post("/:id/posts", validateUserId, (req, res) => {
   // YENİ OLUŞTURULAN KULLANICI NESNESİNİ DÖNDÜRÜN
   // user id yi doğrulayan bir ara yazılım gereklidir.
   // ve istek gövdesini doğrulayan bir ara yazılım gereklidir.

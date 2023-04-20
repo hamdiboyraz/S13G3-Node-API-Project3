@@ -1,25 +1,43 @@
+const userController = require("../users/users-model");
+
 function logger(req, res, next) {
-  // SİHRİNİZİ GÖRELİM
-  console.log(req.method);
-  console.log(req.url);
+  const method = req.method;
+  const url = req.url;
   const timestamp = new Date().toLocaleString();
-  console.log(timestamp);
+  console.log(`${method} -- ${url} -- ${timestamp}`);
   next();
 }
 
-function validateUserId(req, res, next) {
-  // SİHRİNİZİ GÖRELİM
-  next();
+async function validateUserId(req, res, next) {
+  try {
+    // console.log(req.params);
+    const { id } = req.params;
+    const user = await userController.getById(id);
+    if (!user) {
+      return res.status(404).json({ message: "kullanıcı bulunamadı" });
+    }
+    req.user = user;
+    next();
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
 }
 
 function validateUser(req, res, next) {
-  // SİHRİNİZİ GÖRELİM
-  next();
+  try {
+    next();
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
 }
 
 function validatePost(req, res, next) {
-  // SİHRİNİZİ GÖRELİM
-  next();
+  try {
+    next();
+  } catch (err) {}
+  next(err);
 }
 
 // bu işlevleri diğer modüllere değdirmeyi unutmayın
